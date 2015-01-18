@@ -83,6 +83,8 @@ branches. Action parameters:
   parameter. 
 * *question* -> text of the question
 * *answerYes* -> final answer in case of "yes"
+* *answerNo* (read-only) -> final answer in case of "no". Used only to help 
+  the view render the form again without datamap lookup, in case of error. 
 
 ### "answer" action
 
@@ -96,7 +98,7 @@ As a reaction, the controller will lookup the answers datamap for given
 *questionId* and *answer* combination and depending on the found value
 do one of following: 
 
-* No answer found: next action will be no-action with error message. 
+* No answer is found: next action will be no-action with error message. 
   This is system error which means data corruption. 
 * The answer is a numeric: this means answer id of the next question. 
   Next action will be **answer** for the next question

@@ -60,6 +60,7 @@ EOS;
         $expectedOutput = <<<EOS
 <form method="post" action="?action=add">
 <input name="parentAnswerId" type="hidden" value="$parentAnswerId"/>
+<input name="answerNo" type="hidden" value="$answerNo"/>
 <p>
     <label>You say <strong>$answerNo</strong> is not the correct answer, 
            please write the correct answer:</label>

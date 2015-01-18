@@ -18,7 +18,7 @@ class QuestionController
         $this->view = $view;
     }
         
-    public function answer( $post ){
+    public function answeraa( $post ){
         $result = array( "questionId" => 1 );
         if( !empty($post["questionId"]) && !empty($post["answer"]) ){
             $answerKey = $post["questionId"].substr($post["answer"],0,1);
@@ -36,8 +36,7 @@ class QuestionController
         return $result;
     }
     
-    public function init( $post )
-    {
+    public function init( $post ){
         $errors = $this->buildErrorMessages( array( "question",
                                                     "answerYes",
                                                     "answerNo" ), 
@@ -53,9 +52,26 @@ class QuestionController
             return $this->view->outputNoActionForm( array( "Thank you. Press OK to start again." ) );
         }
     }
+    
+    public function add( $post ){
+        $errors = $this->buildErrorMessages( array( "parentAnswerId", 
+                                                    "question", 
+                                                    "answerYes",
+                                                    "answerNo" ), $post );
+        if( !empty( $errors ) ){
+            return $this->view->outputErrorMessages( $errors ).
+                   $this->view->outputAddActionForm( $post["parentAnswerId"],
+                                                     $post["answerNo"] );
+        }
+        else{
+            $this->model->addAnswer( $post["parentAnswerId"],
+                                     $post["question"],
+                                     $post["answerYes"] );
+            return $this->view->outputNoActionForm( array( "Thank you. Press OK to start again." ) );
+        }
+    }
 
-    private function buildErrorMessages( $expectedFields, $post )
-    {
+    private function buildErrorMessages( $expectedFields, $post ){
         $messages = array();
         foreach( $expectedFields as $field ){
             if( empty( $post[$field] ) ){

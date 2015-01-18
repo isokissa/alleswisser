@@ -62,13 +62,63 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
                      ->getMock();
         $view->expects( $this->once() )
              ->method( "outputErrorMessages" )
-             ->with( $this->equalTo( array( "Error: field 'question' is not given",
-                                            "Error: field 'answerNo' is not given" ) 
-                                    ) );
+             ->with( array( "Error: field 'question' is not given",
+                            "Error: field 'answerNo' is not given" ) );
         $view->expects( $this->once() )
              ->method( "outputInitActionForm" );
         $controller = new QuestionController( $model, $view );
         $controller->init( $post );
+    }
+    
+    public function testActionAddWithIncorrectInput_ErrorMessageAndAddAgain(){
+        $post = array( "parentAnswerId" => "5n",
+                       "question" => null,
+                       "answerYes" => null,
+                       "answerNo" => "bird" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->getMock();
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputAddActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputErrorMessages" )
+             ->with( $this->equalTo( array( "Error: field 'question' is not given",
+                                            "Error: field 'answerYes' is not given" )
+                                    ) );
+        $view->expects( $this->once() )
+             ->method( "outputAddActionForm" )
+             ->with( "5n", "bird" );
+        $controller = new QuestionController( $model, $view );
+        $controller->add( $post );
+    }
+    
+    public function testActionAddWithCorrectInput_AddTheAnswerAndStartFromBeginning(){
+        $post = array( "parentAnswerId" => "5n",
+                       "question" => "Does it have four legs",
+                       "answerYes" => "cat",
+                       "answerNo" => "bird" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->setMethods( array( "addAnswer" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "addAnswer" )
+              ->with( $this->equalTo( $post["parentAnswerId"] ),
+                      $this->equalTo( $post["question"] ),
+                      $this->equalTo( $post["answerYes"] ) );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputNoActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->exactly( 0 ) )
+             ->method( "outputErrorMessages" );
+        $view->expects( $this->once() )
+             ->method( "outputNoActionForm" )
+             ->with( $this->equalTo( array( "Thank you. Press OK to start again." ) ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->add( $post );
     }
             
 }
