@@ -92,12 +92,12 @@ EOS;
         return $output;
     }
     
-    public function outputFinalActionForm( $answerId, $finalQuestion ){
+    public function outputFinalActionForm( $answerId, $finalAnswer ){
         $output = <<<EOS
 <form method="post" action="?action=final">
 <input name="answerId" type="hidden" value="$answerId"/>
 <p>
-    <label>Is the final answer <strong>$finalQuestion</strong>?</label>
+    <label>Is the final answer <strong>$finalAnswer</strong>?</label>
 </p>
 <p>
     <input type="submit" name="answer" value="yes">Yes</input>

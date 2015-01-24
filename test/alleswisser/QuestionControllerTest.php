@@ -120,6 +120,114 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
         $controller = new QuestionController( $model, $view );
         $controller->add( $post );
     }
+
+    public function testActionAnswerIncompleteParameters_ErrorMessageAndStartFromBeginning(){
+        $post = array( "questionId" => "5",
+                       "answer" => null );
+        $model = $this->getMockBuilder( "Model" )
+                      ->getMock();
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputNoActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputErrorMessages" )
+             ->with( $this->equalTo( array( "Error: field 'answer' is not given" ) ) );
+        $view->expects( $this->once() )
+             ->method( "outputNoActionForm" )
+             ->with( $this->equalTo( array( "Bad error, the data is corrupted" ) ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answer( $post );
+    }
+    
+
+    
+    public function testActionAnswerWhichLeadsToNonExisting_ErrorMessageAndStartFromBeginning(){
+        $post = array( "questionId" => "5",
+                       "answer" => "yes" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->setMethods( array( "getAnswer" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "getAnswer" )
+              ->with( $this->equalTo( "5y" ) )
+              ->will( $this->returnValue(null) );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputNoActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputErrorMessages" )
+             ->with( $this->equalTo( array( "Fatal: question 5y is not found!" ) ) );
+        $view->expects( $this->once() )
+             ->method( "outputNoActionForm" )
+             ->with( $this->equalTo( array( "Bad error, the data is corrupted" ) ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answer( $post );
+    }
+    
+    public function testActionAnswerWhichLeadsToNextQuesiton_outputAnswerFormForNextQuestion(){
+        $post = array( "questionId" => "5",
+                       "answer" => "yes" );
+        $nextQuestionId = "34";
+        $nextQuestion = "Is it blue";
+        $model = $this->getMockBuilder( "Model" )
+                      ->setMethods( array( "getAnswer", "getQuestion" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "getAnswer" )
+              ->with( $this->equalTo( "5y" ) )
+              ->will( $this->returnValue( $nextQuestionId ) );
+        $model->expects( $this->once() )
+              ->method( "getQuestion" )
+              ->with( $this->equalTo( $nextQuestionId ) )
+              ->will( $this->returnValue( $nextQuestion ) );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputAnswerActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->exactly( 0 ) )
+             ->method( "outputErrorMessages" );
+        $view->expects( $this->once() )
+             ->method( "outputAnswerActionForm" )
+             ->with( $this->equalTo( $nextQuestionId ), 
+                     $this->equalTo( $nextQuestion ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answer( $post );
+    }
+
+    public function testActionAnswerWhichLeadsToFinalAnswer_outputFinalAnswerForm(){
+        $post = array( "questionId" => "5",
+                       "answer" => "yes" );
+        $answer = "cat";
+        $model = $this->getMockBuilder( "Model" )
+                      ->setMethods( array( "getAnswer" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "getAnswer" )
+              ->with( $this->equalTo( "5y" ) )
+              ->will( $this->returnValue( $answer ) );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages", 
+                                          "outputFinalActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->exactly( 0 ) )
+             ->method( "outputErrorMessages" );
+        $view->expects( $this->once() )
+             ->method( "outputFinalActionForm" )
+             ->with( $this->equalTo( "5y" ), 
+                     $this->equalTo( $answer ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answer( $post );
+    }
+
+    public function testActionFinalReceivesYes_outputCelebrateAndStartFromBeginning(){
+        $post = array( "questionId" => "5" );
+    }
             
 }
 ?>

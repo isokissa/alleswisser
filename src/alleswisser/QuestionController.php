@@ -17,25 +17,7 @@ class QuestionController
         }
         $this->view = $view;
     }
-        
-    public function answeraa( $post ){
-        $result = array( "questionId" => 1 );
-        if( !empty($post["questionId"]) && !empty($post["answer"]) ){
-            $answerKey = $post["questionId"].substr($post["answer"],0,1);
-            $answer = $this->model->getAnswer( $answerKey );
-            if( !empty($answer) ){
-                if( is_numeric( $answer ) ){
-                    $result["questionId"] = $answer;
-                }
-                else {
-                    $result["questionId"] = $answerKey;
-                    $result["finalAnswer"] = $answer;
-                }
-            }
-        }
-        return $result;
-    }
-    
+            
     public function init( $post ){
         $errors = $this->buildErrorMessages( array( "question",
                                                     "answerYes",
@@ -68,6 +50,33 @@ class QuestionController
                                      $post["question"],
                                      $post["answerYes"] );
             return $this->view->outputNoActionForm( array( "Thank you. Press OK to start again." ) );
+        }
+    }
+    
+    public function answer( $post ){
+        $errors = $this->buildErrorMessages( array( "questionId", "answer" ),
+                                             $post );
+        if( !empty( $errors ) ){
+            return $this->view->outputErrorMessages( $errors ).
+                   $this->view->outputNoActionForm( array( "Bad error, the data is corrupted" ) );
+        }
+        else{
+            $answerKey = $post["questionId"].substr($post["answer"],0,1);
+            $answer = $this->model->getAnswer( $answerKey );
+            if( !empty($answer) ){
+                if( is_numeric( $answer ) ){
+                    $nextQuestionId = $answer;
+                    $nextQuestion = $this->model->getQuestion( $nextQuestionId );
+                    return $this->view->outputAnswerActionForm( $nextQuestionId, $nextQuestion );
+                }
+                else {
+                    return $this->view->outputFinalActionForm( $answerKey, $answer );
+                }
+            }
+            else {
+                return $this->view->outputErrorMessages( array( "Fatal: question $answerKey is not found!" )  ).
+                       $this->view->outputNoActionForm( array( "Bad error, the data is corrupted" ) );
+            }
         }
     }
 
