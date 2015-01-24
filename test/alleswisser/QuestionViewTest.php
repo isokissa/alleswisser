@@ -100,15 +100,16 @@ EOS;
         $this->assertEquals( $expectedOutput, $output );
     }
 
-    public function testOutputFinalActionForm(){
+    public function testOutputAnswerFinalActionForm(){
         $answerId = "231y";
-        $finalQuestion = "cat"; 
-        $output = $this->view->outputFinalActionForm( $answerId, $finalQuestion );
+        $finalAnswer = "cat"; 
+        $output = $this->view->outputAnswerFinalActionForm( $answerId, $finalAnswer );
         $expectedOutput = <<<EOS
-<form method="post" action="?action=final">
+<form method="post" action="?action=answerFinal">
 <input name="answerId" type="hidden" value="$answerId"/>
+<input name="finalAnswer" type="hidden" value="$finalAnswer"/>
 <p>
-    <label>Is the final answer <strong>$finalQuestion</strong>?</label>
+    <label>Is the final answer <strong>$finalAnswer</strong>?</label>
 </p>
 <p>
     <input type="submit" name="answer" value="yes">Yes</input>

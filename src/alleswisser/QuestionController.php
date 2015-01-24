@@ -58,7 +58,7 @@ class QuestionController
                                              $post );
         if( !empty( $errors ) ){
             return $this->view->outputErrorMessages( $errors ).
-                   $this->view->outputNoActionForm( array( "Bad error, the data is corrupted" ) );
+                   $this->view->outputNoActionForm( array( "Press OK to start again!" ) );
         }
         else{
             $answerKey = $post["questionId"].substr($post["answer"],0,1);
@@ -76,6 +76,23 @@ class QuestionController
             else {
                 return $this->view->outputErrorMessages( array( "Fatal: question $answerKey is not found!" )  ).
                        $this->view->outputNoActionForm( array( "Bad error, the data is corrupted" ) );
+            }
+        }
+    }
+    
+    public function answerFinal( $post ){
+        $errors = $this->buildErrorMessages( array( "answerId", "finalAnswer", "answer" ),
+                                             $post );
+        if( !empty( $errors ) ){
+            return $this->view->outputErrorMessages( $errors ).
+                   $this->view->outputNoActionForm( array( "Press OK to start again!" ) );
+        }
+        else{
+            if( $post["answer"] == "yes" ){
+                return $this->view->outputNoActionForm( array( "I am so smart!", "Let's do it again!" ) );
+            }
+            else if( $post["answer"] == "no" ){
+                return $this->view->outputAddActionForm( $post["answerId"], $post["finalAnswer"] );
             }
         }
     }

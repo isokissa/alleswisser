@@ -103,14 +103,15 @@ do one of following:
 * The answer is a numeric: this means answer id of the next question. 
   Next action will be **answer** for the next question
 * The answer is not numeric: it is considered to be the final answer. 
-  Next action will be to ask the final answer, and the action is **final**.
+  Next action will be to ask the final answer, and the action is **answerFinal**.
 
 
-### "final" action
+### "answerFinal" action
 
 Asks the final question. Parameters: 
 
 * *answerId* -> id of the question asked
+* *finalAnswer* -> the text of the final answer. 
 * *answer* -> contains the value of the answer: "yes" or "no"
 
 If answer is "yes", write a triumphal message and no-action. If answer is

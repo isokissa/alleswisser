@@ -136,7 +136,7 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
              ->with( $this->equalTo( array( "Error: field 'answer' is not given" ) ) );
         $view->expects( $this->once() )
              ->method( "outputNoActionForm" )
-             ->with( $this->equalTo( array( "Bad error, the data is corrupted" ) ) );
+             ->with( $this->equalTo( array( "Press OK to start again!" ) ) );
         $controller = new QuestionController( $model, $view );
         $controller->answer( $post );
     }
@@ -224,10 +224,72 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
         $controller = new QuestionController( $model, $view );
         $controller->answer( $post );
     }
-
-    public function testActionFinalReceivesYes_outputCelebrateAndStartFromBeginning(){
-        $post = array( "questionId" => "5" );
+    
+    public function testActionAnswerFinalIncomplete_ErrorMessageAndStartFromTheBeginning(){
+        $post = array( "answerId" => "5", 
+                       "finalAnswer" => "cat" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->getMock();
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputErrorMessages",
+                                          "outputNoActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputErrorMessages" )
+             ->with( $this->equalTo( array( "Error: field 'answer' is not given" ) ) );
+        $view->expects( $this->once() )
+             ->method( "outputNoActionForm" )
+             ->with( $this->equalTo( array( "Press OK to start again!" ) ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answerFinal( $post );
     }
+
+    public function testActionAnswerFinalReceivesYes_outputCelebrateAndStartFromBeginning(){
+        $post = array( "answerId" => "5", 
+                       "finalAnswer" => "cat",
+                       "answer" => "yes" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->getMock();
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputNoActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputNoActionForm" )
+             ->with( $this->equalTo( array( "I am so smart!", "Let's do it again!" ) ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answerFinal( $post );
+    }
+            
+    public function testActionAnswerFinalReceivesNo_outputAddActionFormToAskDistinguishingQuestion(){
+        $post = array( "answerId" => "5n", 
+                       "finalAnswer" => "cat",
+                       "answer" => "no" );
+        $model = $this->getMockBuilder( "Model" )
+                      ->getMock();
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputAddActionForm" ) )
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputAddActionForm" )
+             ->with( $this->equalTo( $post["answerId"] ), 
+                     $this->equalTo( $post["finalAnswer"] ) );
+        $controller = new QuestionController( $model, $view );
+        $controller->answerFinal( $post );
+    }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
 }
 ?>
