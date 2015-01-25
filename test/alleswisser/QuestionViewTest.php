@@ -1,9 +1,9 @@
 <?php
+namespace Isokissa\Alleswisser;
 
 require_once( "src/alleswisser/QuestionView.php" );
 
-
-class QuestionViewTest extends PHPUnit_Framework_TestCase
+class QuestionViewTest extends \PHPUnit_Framework_TestCase
 {
     private $view;    
     

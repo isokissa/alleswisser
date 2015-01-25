@@ -1,4 +1,5 @@
 <?php
+namespace Isokissa\Alleswisser;
 
 class QuestionController 
 {
@@ -109,8 +110,8 @@ class QuestionController
 
 }
 
-class QuestionControllerInvalidModelException extends Exception {}
+class QuestionControllerInvalidModelException extends \Exception {}
 
-class QuestionControllerInvalidViewException extends Exception {}
+class QuestionControllerInvalidViewException extends \Exception {}
 
 ?>

@@ -1,9 +1,9 @@
 <?php
+namespace Isokissa\Alleswisser;
 
 require_once( "src/alleswisser/QuestionController.php" );
 
-
-class QuestionControllerTest extends PHPUnit_Framework_TestCase
+class QuestionControllerTest extends \PHPUnit_Framework_TestCase
 {
         
     protected function setUp()
@@ -12,7 +12,7 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
     
     public function testCreateWithNullModel_ThrowsException()
     {
-        $this->setExpectedException( "QuestionControllerInvalidModelException" );
+        $this->setExpectedException( "Isokissa\Alleswisser\QuestionControllerInvalidModelException" );
         $shouldFail = new QuestionController( null, null );
     }
     
@@ -20,7 +20,7 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
     {
         $dummyModel = $this->getMockBuilder( "Model" )
                            ->getMock();
-        $this->setExpectedException( "QuestionControllerInvalidViewException" );
+        $this->setExpectedException( "Isokissa\Alleswisser\QuestionControllerInvalidViewException" );
         $shouldFail = new QuestionController( $dummyModel, null );
     }
     
@@ -279,17 +279,6 @@ class QuestionControllerTest extends PHPUnit_Framework_TestCase
         $controller = new QuestionController( $model, $view );
         $controller->answerFinal( $post );
     }
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
             
 }
 ?>

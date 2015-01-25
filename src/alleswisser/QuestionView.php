@@ -1,4 +1,6 @@
 <?php
+namespace Isokissa\Alleswisser;
+
 
 class QuestionView {
 
@@ -111,7 +113,7 @@ EOS;
 
 }
 
-class QuestionViewInvalidModelException extends Exception {}
+class QuestionViewInvalidModelException extends \Exception {}
 
 
 ?>
