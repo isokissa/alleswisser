@@ -76,10 +76,10 @@ is a question that has final answers for both "yes" and "no"
 branches. Action parameters: 
 
 * *parentAnswerId* -> This parameter is a pointer into answers datamap. 
-  New question will be added as child of this parameter and the answer given 
-  with this parameter will be updated to point to point to new question.
-  The original answer will be moved to "no" branch of the new question. 
-  "yes" branch of the new question will be the value from *answerYes* 
+  (1) New question will be added as child of this parameter and (2) the answer given 
+  with this parameter will be updated to point to new question.
+  (3) The original answer will be moved to "no" branch of the new question. 
+  (4) "yes" branch of the new question will be the value from *answerYes* 
   parameter. 
 * *question* -> text of the question
 * *answerYes* -> final answer in case of "yes"

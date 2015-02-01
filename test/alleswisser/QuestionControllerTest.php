@@ -18,7 +18,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
     
     public function testCreateWithNullView_ThrowsException()
     {
-        $dummyModel = $this->getMockBuilder( "Model" )
+        $dummyModel = $this->getMockBuilder( "ModelInterface" )
                            ->getMock();
         $this->setExpectedException( "Isokissa\Alleswisser\QuestionControllerInvalidViewException" );
         $shouldFail = new QuestionController( $dummyModel, null );
@@ -29,7 +29,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $post = array( "question" => "Is it wet",
                        "answerYes" => "sea", 
                        "answerNo" => "tree" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->setMethods( array( "addFirstQuestion" ) )
                       ->getMock();
         $model->expects( $this->once() )
@@ -53,7 +53,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $post = array( "question" => null,
                        "answerYes" => "sea", 
                        "answerNo" => null );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputErrorMessages",
@@ -75,7 +75,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
                        "question" => null,
                        "answerYes" => null,
                        "answerNo" => "bird" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputErrorMessages", 
@@ -99,11 +99,11 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
                        "question" => "Does it have four legs",
                        "answerYes" => "cat",
                        "answerNo" => "bird" );
-        $model = $this->getMockBuilder( "Model" )
-                      ->setMethods( array( "addAnswer" ) )
+        $model = $this->getMockBuilder( "ModelInterface" )
+                      ->setMethods( array( "addDistinguishingQuestion" ) )
                       ->getMock();
         $model->expects( $this->once() )
-              ->method( "addAnswer" )
+              ->method( "addDistinguishingQuestion" )
               ->with( $this->equalTo( $post["parentAnswerId"] ),
                       $this->equalTo( $post["question"] ),
                       $this->equalTo( $post["answerYes"] ) );
@@ -124,7 +124,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
     public function testActionAnswerIncompleteParameters_ErrorMessageAndStartFromBeginning(){
         $post = array( "questionId" => "5",
                        "answer" => null );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputErrorMessages", 
@@ -141,12 +141,10 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $controller->answer( $post );
     }
     
-
-    
     public function testActionAnswerWhichLeadsToNonExisting_ErrorMessageAndStartFromBeginning(){
         $post = array( "questionId" => "5",
                        "answer" => "yes" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->setMethods( array( "getAnswer" ) )
                       ->getMock();
         $model->expects( $this->once() )
@@ -173,7 +171,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
                        "answer" => "yes" );
         $nextQuestionId = "34";
         $nextQuestion = "Is it blue";
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->setMethods( array( "getAnswer", "getQuestion" ) )
                       ->getMock();
         $model->expects( $this->once() )
@@ -203,7 +201,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $post = array( "questionId" => "5",
                        "answer" => "yes" );
         $answer = "cat";
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->setMethods( array( "getAnswer" ) )
                       ->getMock();
         $model->expects( $this->once() )
@@ -228,7 +226,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
     public function testActionAnswerFinalIncomplete_ErrorMessageAndStartFromTheBeginning(){
         $post = array( "answerId" => "5", 
                        "finalAnswer" => "cat" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputErrorMessages",
@@ -249,7 +247,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $post = array( "answerId" => "5", 
                        "finalAnswer" => "cat",
                        "answer" => "yes" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputNoActionForm" ) )
@@ -266,7 +264,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $post = array( "answerId" => "5n", 
                        "finalAnswer" => "cat",
                        "answer" => "no" );
-        $model = $this->getMockBuilder( "Model" )
+        $model = $this->getMockBuilder( "ModelInterface" )
                       ->getMock();
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputAddActionForm" ) )
@@ -279,6 +277,6 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new QuestionController( $model, $view );
         $controller->answerFinal( $post );
     }
-            
+
 }
 ?>

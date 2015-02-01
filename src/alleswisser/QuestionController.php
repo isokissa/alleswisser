@@ -47,9 +47,9 @@ class QuestionController
                                                      $post["answerNo"] );
         }
         else{
-            $this->model->addAnswer( $post["parentAnswerId"],
-                                     $post["question"],
-                                     $post["answerYes"] );
+            $this->model->addDistinguishingQuestion( $post["parentAnswerId"],
+                                                     $post["question"],
+                                                     $post["answerYes"] );
             return $this->view->outputNoActionForm( array( "Thank you. Press OK to start again." ) );
         }
     }
