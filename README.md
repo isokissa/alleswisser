@@ -50,7 +50,7 @@ Next action is shown in **bold**.
 
 This action takes place when no "action" is given in the request. It
 starts new session, which means ask the **answer** for the first 
-question. If there is no first qustion, do the **init** action and 
+question. If there is no first question, do the **init** action and 
 ask the user to add first question 
 
 ### "init" action

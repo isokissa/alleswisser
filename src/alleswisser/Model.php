@@ -47,6 +47,8 @@ class Model implements ModelInterface
         $newQuestionId = uniqid();
         $this->dataMap->set( "questions", $newQuestionId, $question );
         $this->dataMap->set( "answers", $parentAnswerId, $newQuestionId );
+        $this->dataMap->set( "answers", $newQuestionId."n", $originalAnswer );
+        $this->dataMap->set( "answers", $newQuestionId."y", $answerYes );
         return $newQuestionId;
     }
     

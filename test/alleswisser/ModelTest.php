@@ -118,7 +118,9 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $newAnswer = "bird";
         $questionId = $this->model->addDistinguishingQuestion( "0y", $newQuestion, $newAnswer );
         $this->assertEquals( $newQuestion, $this->model->getQuestion( $questionId ) );
-        $this->assertEquals( $questionId , $this->model->getAnswer( "0y" ) ); // (1)
+        $this->assertEquals( $questionId , $this->model->getAnswer( "0y" ) ); // (1), (2) 
+        $this->assertEquals( $originalAnswer, $this->model->getAnswer( $questionId."n" ) ); // (3)
+        $this->assertEquals( $newAnswer, $this->model->getAnswer( $questionId."y" ) ); // (4) 
     }
 
 }
