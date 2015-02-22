@@ -1,3 +1,10 @@
+<?php
+namespace Isokissa\Alleswisser;
+
+require_once( "Model.php" );
+require_once( "QuestionView.php" );
+?>
+
 <!DOCTYPE html>
 <html>
 <header>
@@ -9,8 +16,6 @@
 <body>
 
 <?php
-
-require_once( "QuestionView.php" );
 
 
 $model = new Model(); 

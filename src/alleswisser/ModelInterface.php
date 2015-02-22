@@ -4,7 +4,7 @@ namespace Isokissa\Alleswisser;
 
 interface ModelInterface
 {    
-    public function clearAll();
+    public function deleteAll();
     
     public function count();
     

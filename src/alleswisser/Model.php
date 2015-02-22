@@ -17,7 +17,8 @@ class Model implements ModelInterface
         }
     }
     
-    public function clearAll(){
+    public function deleteAll(){
+        $this->dataMap->deleteAll();
     }
     
     public function count(){
