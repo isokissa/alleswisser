@@ -14,10 +14,20 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function setup(){
         $this->storage = new StubDataMap();
         $this->model = new Model( $this->storage );
-        $this->model->clearAll();
+    }
+    
+    public function tearDown() {
+        $this->model->deleteAll();
     }
 
     public function testAfterCreatingNew_CountIsZero(){
+        $this->assertEquals( 0, $this->model->count() );
+    }
+    
+    public function testAfterClearAll_CountIsZero(){
+        $this->model->addFirstQuestion("abc", "def", "ghi");
+        $this->assertEquals( 1, $this->model->count() );
+        $this->model->deleteAll();
         $this->assertEquals( 0, $this->model->count() );
     }
     
@@ -158,8 +168,10 @@ class StubDataMap implements DataMapInterface {
         }
     }
 
+    public function deleteAll() {
+        $this->maps = array();
+    }
+
 }
-
-
 
 ?>
