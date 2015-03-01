@@ -23,6 +23,49 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException( "Isokissa\Alleswisser\QuestionControllerInvalidViewException" );
         $shouldFail = new QuestionController( $dummyModel, null );
     }
+
+    public function testDefaultActionWithNoDefinedQuestion_outputAddFirstQuestion(){
+        $model = $this->getMockBuilder( "ModelInterface" )
+                      ->setMethods( array( "count" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "count" )
+              ->willReturn( 0 );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputInitActionForm" ))
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputInitActionForm" );
+        $controller = new QuestionController( $model, $view );   
+        $controller->defaultAction();
+    }
+
+    public function testDefaultActionWithDefinedQuestions_outputAskFirstQuestion(){
+        $firstQuestion = "Is it a living thing";
+        $model = $this->getMockBuilder( "ModelInterface" )
+                      ->setMethods( array( "count", "getQuestion" ) )
+                      ->getMock();
+        $model->expects( $this->once() )
+              ->method( "count" )
+              ->willReturn( 5 );
+        $model->expects( $this->once() )
+              ->method( "getQuestion" )
+              ->with( $this->equalTo( "0" ) )
+              ->willReturn( $firstQuestion );
+        $view = $this->getMockBuilder( "QuestionView" )
+                     ->setMethods( array( "outputAnswerActionForm" ))
+                     ->disableOriginalConstructor()
+                     ->getMock();
+        $view->expects( $this->once() )
+             ->method( "outputAnswerActionForm" )
+             ->with( $this->equalTo( "0" ), 
+                     $this->equalTo( $firstQuestion ));        
+        $controller = new QuestionController( $model, $view );   
+        $controller->defaultAction();
+    }
+
+    
     
     public function testActionInitWithCorrectInput_StartFromBeginning()
     {
@@ -177,7 +220,7 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $model->expects( $this->once() )
               ->method( "getAnswer" )
               ->with( $this->equalTo( "5y" ) )
-              ->will( $this->returnValue( $nextQuestionId ) );
+              ->will( $this->returnValue( "ID:".$nextQuestionId ) );
         $model->expects( $this->once() )
               ->method( "getQuestion" )
               ->with( $this->equalTo( $nextQuestionId ) )
@@ -210,13 +253,13 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
               ->will( $this->returnValue( $answer ) );
         $view = $this->getMockBuilder( "QuestionView" )
                      ->setMethods( array( "outputErrorMessages", 
-                                          "outputFinalActionForm" ) )
+                                          "outputAnswerFinalActionForm" ) )
                      ->disableOriginalConstructor()
                      ->getMock();
         $view->expects( $this->exactly( 0 ) )
              ->method( "outputErrorMessages" );
         $view->expects( $this->once() )
-             ->method( "outputFinalActionForm" )
+             ->method( "outputAnswerFinalActionForm" )
              ->with( $this->equalTo( "5y" ), 
                      $this->equalTo( $answer ) );
         $controller = new QuestionController( $model, $view );
@@ -277,6 +320,6 @@ class QuestionControllerTest extends \PHPUnit_Framework_TestCase
         $controller = new QuestionController( $model, $view );
         $controller->answerFinal( $post );
     }
-
+    
 }
 ?>

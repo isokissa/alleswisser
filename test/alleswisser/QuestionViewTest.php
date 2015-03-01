@@ -15,7 +15,7 @@ class QuestionViewTest extends \PHPUnit_Framework_TestCase
         $text1 = "Testing text, first line";
         $text2 = "and second line";
         $expectedOutput =<<<EOS
-<form method="post">
+<form>
 <p><label>$text1</label></p>
 <p><label>$text2</label></p>
 <p>

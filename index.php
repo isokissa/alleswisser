@@ -1,8 +1,7 @@
 <?php
 namespace Isokissa\Alleswisser;
 
-require_once( "Model.php" );
-require_once( "QuestionView.php" );
+require_once( "vendor/autoload.php");
 ?>
 
 <!DOCTYPE html>
@@ -17,8 +16,8 @@ require_once( "QuestionView.php" );
 
 <?php
 
-
-$model = new Model(); 
+$dataMap = new NoSQLiteDataMap( __DIR__."/alleswisser.db" );
+$model = new Model( $dataMap ); 
 $view = new QuestionView();
 $controller = new QuestionController($model, $view); 
 
@@ -26,7 +25,7 @@ if (isset($_GET['action'])){
     echo $controller->{$_GET['action']}($_POST);
 }
 else {
-    echo $view->outputQuestion( 1 );
+    echo $controller->defaultAction();
 }
 
 ?>

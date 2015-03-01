@@ -6,7 +6,7 @@ class QuestionView {
 
     public function outputNoActionForm( $textLines ){
         $output = <<<EOS
-<form method="post">
+<form>
 
 EOS;
         foreach( $textLines as $line ){
