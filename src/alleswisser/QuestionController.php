@@ -18,7 +18,17 @@ class QuestionController
         }
         $this->view = $view;
     }
-            
+
+    public function defaultAction() {
+        if( $this->model->count() == 0 ){
+            return $this->view->outputInitActionForm();
+        }
+        else{
+            $firstQuestion = $this->model->getQuestion( "0" );
+            return $this->view->outputAnswerActionForm( "0", $firstQuestion );
+        }
+    }
+
     public function init( $post ){
         $errors = $this->buildErrorMessages( array( "question",
                                                     "answerYes",
@@ -65,13 +75,13 @@ class QuestionController
             $answerKey = $post["questionId"].substr($post["answer"],0,1);
             $answer = $this->model->getAnswer( $answerKey );
             if( !empty($answer) ){
-                if( is_numeric( $answer ) ){
-                    $nextQuestionId = $answer;
+                if( substr( $answer, 0, 3 ) == "ID:" ){
+                    $nextQuestionId = substr( $answer, 3 );
                     $nextQuestion = $this->model->getQuestion( $nextQuestionId );
                     return $this->view->outputAnswerActionForm( $nextQuestionId, $nextQuestion );
                 }
                 else {
-                    return $this->view->outputFinalActionForm( $answerKey, $answer );
+                    return $this->view->outputAnswerFinalActionForm( $answerKey, $answer );
                 }
             }
             else {
@@ -101,7 +111,9 @@ class QuestionController
     private function buildErrorMessages( $expectedFields, $post ){
         $messages = array();
         foreach( $expectedFields as $field ){
-            if( empty( $post[$field] ) ){
+            if( !array_key_exists( $field, $post ) 
+                    || $post[$field] == null 
+                    || $post[$field] == "" ){
                 $messages[] = "Error: field '$field' is not given";
             }
         }
