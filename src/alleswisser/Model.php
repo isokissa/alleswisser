@@ -41,7 +41,7 @@ class Model implements ModelInterface
         $this->checkMissing( $parentAnswerId, "parentAnswerId" );
         $this->checkMissing( $question, "question" );
         $this->checkMissing( $answerYes, "answerYes" );
-        if( empty( $this->dataMap->get( "answers", $parentAnswerId ) ) ){
+        if( !$this->dataMap->get( "answers", $parentAnswerId ) ){
             throw new ModelInvalidParentException( $parentAnswerId );
         }
         $originalAnswer = $this->dataMap->get( "answers", $parentAnswerId );
@@ -62,7 +62,7 @@ class Model implements ModelInterface
     }
     
     private function checkMissing( $parameter, $name ){
-        if( empty( $parameter ) ){
+        if( !isset($parameter) || $parameter == "" ){
             throw new ModelMissingParametersException( $name." is missing" ); 
         }
     }

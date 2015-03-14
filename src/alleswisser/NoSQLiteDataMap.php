@@ -28,7 +28,7 @@ class NoSQLiteDataMap implements DataMapInterface {
         if( $this->nsql == null ){
             $this->nsql = new \NoSQLite\NoSQLite( $this->dataMapFileName );
         }
-        if( empty($this->dataMaps[$mapName]) ){
+        if( !array_key_exists( $mapName, $this->dataMaps ) ){
             $this->dataMaps[$mapName] = $this->nsql->getStore($mapName);
         }
         return $this->dataMaps[$mapName];
