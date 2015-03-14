@@ -9,11 +9,11 @@ class QuestionController
 
     public function __construct( $model, $view )
     {
-        if( empty($model) ){
+        if( !isset($model) /*|| !($model instanceof Model)*/ ){
             throw new QuestionControllerInvalidModelException();
         }
         $this->model = $model;
-        if( empty( $view ) ){
+        if( !isset($view) /*|| !($view instanceof View)*/ ){
             throw new QuestionControllerInvalidViewException();
         }
         $this->view = $view;
@@ -34,7 +34,7 @@ class QuestionController
                                                     "answerYes",
                                                     "answerNo" ), 
                                              $post );
-        if( !empty( $errors ) ){
+        if( count($errors) > 0 ){
             return $this->view->outputErrorMessages( $errors ).
                    $this->view->outputInitActionForm();
         }
@@ -51,7 +51,7 @@ class QuestionController
                                                     "question", 
                                                     "answerYes",
                                                     "answerNo" ), $post );
-        if( !empty( $errors ) ){
+        if( count($errors) > 0 ){
             return $this->view->outputErrorMessages( $errors ).
                    $this->view->outputAddActionForm( $post["parentAnswerId"],
                                                      $post["answerNo"] );
@@ -67,14 +67,14 @@ class QuestionController
     public function answer( $post ){
         $errors = $this->buildErrorMessages( array( "questionId", "answer" ),
                                              $post );
-        if( !empty( $errors ) ){
+        if( count( $errors ) > 0 ){
             return $this->view->outputErrorMessages( $errors ).
                    $this->view->outputNoActionForm( array( "Press OK to start again!" ) );
         }
         else{
             $answerKey = $post["questionId"].substr($post["answer"],0,1);
             $answer = $this->model->getAnswer( $answerKey );
-            if( !empty($answer) ){
+            if( strlen($answer) > 0 ){
                 if( substr( $answer, 0, 3 ) == "ID:" ){
                     $nextQuestionId = substr( $answer, 3 );
                     $nextQuestion = $this->model->getQuestion( $nextQuestionId );
@@ -94,7 +94,7 @@ class QuestionController
     public function answerFinal( $post ){
         $errors = $this->buildErrorMessages( array( "answerId", "finalAnswer", "answer" ),
                                              $post );
-        if( !empty( $errors ) ){
+        if( count( $errors ) > 0 ){
             return $this->view->outputErrorMessages( $errors ).
                    $this->view->outputNoActionForm( array( "Press OK to start again!" ) );
         }
