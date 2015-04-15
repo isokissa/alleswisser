@@ -5,8 +5,8 @@ Web application will ask questions, trying to guess the thing that the
 user has imagined. If it finds the right answer, it will celebrate, 
 otherwise it will learn and be more knowledgeable next time. 
 
-Test some of the recent versions at http://alleswisser.isokissa.org
-
+Test some of the recent versions at http://alleswisser.isokissa.org, if you don't
+mind total absence of look and feel. 
 
 How it works
 ------------
